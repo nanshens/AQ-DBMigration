@@ -15,6 +15,14 @@ a db migration tool in python
     db.migration()
 ```
 
+if you want to skip migration, you can set skip is True in db.migration(), like this:
+
+```python
+    db.migration(True)
+```
+
+
+
 ## sql file
 file format: V{version}__{description}.sql   
 example: V1__test.sql, V2__issue1.sql, V2.1__issue11.sql, V2.12__issue12.sql   
