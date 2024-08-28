@@ -88,12 +88,24 @@ class DBMigration(object):
         sql = f"insert into {DBConstant.get_table_name(self.config.db_type)} values (%s, '{record.sequence}', '{record.version}', '{record.description}', '{record.file_path}', %s, {record.execution_time}, '{record.check_value}');"
         self.__execute_sql(sql, (str(uuid.uuid4()), datetime.now()))
 
+    def __close_conn(self):
+        if self.conn:
+            self.conn.close()
 
-    def migration(self):
+    def migration(self, skip=False):
+
+        if skip:
+            logger.info("AQ-DBMigration SKIP")
+            self.__close_conn()
+            return
+
         records = self.__find_all_records()
         base_line = self.__get_base_line(records)
         file_records = []
         files = self.__find_all_files()
+
+        if len(files) == 0:
+            logger.warning(f"AQ-DBMigration WARNING: No files found in {self.config.sql_directory}")
 
         for file_path in files:
             file_name = os.path.basename(file_path)
@@ -133,3 +145,4 @@ class DBMigration(object):
                 raise Exception(f"AQ-DBMigration ERROR: check value error: db is {record.check_value}, but file is {file_record.check_value}")
 
         logger.info("AQ-DBMigration END")
+        self.__close_conn()

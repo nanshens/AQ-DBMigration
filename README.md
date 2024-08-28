@@ -1,6 +1,9 @@
 # AQ-DBMigration
 a db migration tool in python   
 
+## home
+[github: nanshens/AQ-DBMigration](https://github.com/nanshens/AQ-DBMigration)
+
 ## install
 `pip install aq-dbmigration`   
 
